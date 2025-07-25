@@ -14,6 +14,9 @@ ArrayList<PVector> points;
 ArrayList<Float> scanHistory;
 PFont font;
 
+final int sweepWidth = 30;
+ArrayList<Float> sweepAngles = new ArrayList<Float>();
+
 void setup() {
   size(900, 1000);
   
@@ -129,26 +132,18 @@ void draw() {
     text(flippedAngle + "°", x, y);
   }
   
-  // Draw sweep effect that switches direction at 180 degrees
-  float sweepWidth = 30;
-  for (int i = 0; i < sweepWidth; i++) {
-    float alpha = map(i, 0, sweepWidth, 100, 0);
-    stroke(0, 255, 255, alpha);
-    strokeWeight(2);
-    
-    // Calculate angle based on whether angle is increasing or decreasing
-    float sweepAngle;
-    if (angle > previousAngle) {
-      // Angle is increasing: lines should be in front
-      sweepAngle = angle - i;
-    } else {
-      // Angle is decreasing: lines should be behind
-      sweepAngle = angle + i;
-    }
-    
-    float rad = radians(360 - sweepAngle);
+  // Add the current angle to the front
+  sweepAngles.add(0, float(angle));
+  if (sweepAngles.size() > sweepWidth) sweepAngles.remove(sweepAngles.size() - 1);
+
+  // Draw the afterglow lines
+  for (int i = 0; i < sweepAngles.size(); i++) {
+    float alpha = map(i, 0, sweepWidth - 1, 255, 0); // Newest is brightest
+    float rad = radians(360 - sweepAngles.get(i));
     float x = radarRadius * cos(rad);
     float y = radarRadius * sin(rad);
+    stroke(0, 255, 255, alpha);
+    strokeWeight(3);
     line(0, 0, x, y);
   }
   
