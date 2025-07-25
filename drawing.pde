@@ -18,7 +18,7 @@ final int sweepWidth = 30;
 ArrayList<Float> sweepAngles = new ArrayList<Float>();
 
 void setup() {
-  size(900, 1000);
+  fullScreen();
   
   printArray(Serial.list());
   myPort = new Serial(this, "COM3", 9600);
